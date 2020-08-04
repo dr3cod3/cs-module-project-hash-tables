@@ -10,7 +10,7 @@ class HashTableEntry:
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
-hash_data = [None] * MIN_CAPACITY
+
 
 class HashTable:
     """
@@ -22,7 +22,11 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
-        self.capacity = MIN_CAPACITY
+        self.capacity = capacity
+        self.slot = [None for i in range(self.capacity)]
+        
+        self.load_factor = 0
+        self.item_total = 0
 
 
     def get_num_slots(self):
@@ -35,12 +39,12 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here    
+        # Your code here
         self.len()
 
 
     def __len__(self):
-        return len(hash_data)
+        return len(self.slot)
 
 
     def get_load_factor(self):
@@ -49,6 +53,7 @@ class HashTable:
 
         Implement this.
         """
+        return self.load_factor
         # Your code here
 
 
@@ -95,8 +100,19 @@ class HashTable:
         """
         # Your code here
         index = self.hash_index(key)
+        current = self.slot[index]
+        while current:
+            if current.key == key:
+                current.value = value
+                return value
+            current = current.next
 
-        hash_data[index] = value
+        new_slot = HashTableEntry(key, value)
+        self.slot[index] = new_slot
+        self.item_total += 1
+        self.load_factor = self.item_total / self.capacity
+
+
 
 
     def delete(self, key):
@@ -108,32 +124,29 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        if not key:
-            print("Key cannot be empty")
-        else:
-            index = self.hash_index(key)
-
-        if hash_data[index] is not None:
-            hash_data[index] = None
-        return hash_data[index]
-
-
+        index = self.hash_index(key)
+        self.list[index] = None
+        # if not key:
+        #     print("Key cannot be empty")
+        #     return
+        # elf.slot[self.hash_index(key)] = None
+ 
+ 
+  
     def get(self, key):
         """
         Retrieve the value stored with the given key.
 
         Returns None if the key is not found.
 
-        Implement this.
+        Implement thiss
         """
         # Your code here
 
-        if not key:
-            return None
+        if key and self.slot[self.hash_index(key)]:
+            return self.slot[self.hash_index(key)].value
         else:
-            index = self.hash_index[key]
-            val = hash_data[index]
-        return val
+            return None
 
 
     def resize(self, new_capacity):
@@ -144,8 +157,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        self.capacity = new_capacity
+        old_slot = self.slot
+        # self.slot = [None for i in range(self.capacity)]
+        for i in old_slot:
+            if i is not None:
+                current = i
+                while current:
+                    self.put(current.key, current.value)
+                    current = current.next
 
-        self.new_capacity = MIN_CAPACITY * 2
+
 
 
 
