@@ -10,7 +10,7 @@ class HashTableEntry:
 
 # Hash table can't have fewer than this many slots
 MIN_CAPACITY = 8
-
+hash_data = [None] * MIN_CAPACITY
 
 class HashTable:
     """
@@ -22,6 +22,7 @@ class HashTable:
 
     def __init__(self, capacity):
         # Your code here
+        self.capacity = MIN_CAPACITY
 
 
     def get_num_slots(self):
@@ -34,7 +35,12 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        # Your code here    
+        self.len()
+
+
+    def __len__(self):
+        return len(hash_data)
 
 
     def get_load_factor(self):
@@ -63,6 +69,11 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for x in key:
+            hash = ((hash << 5) + hash) + ord(x)
+        return hash & 0xFFFFFFFF
+
 
 
     def hash_index(self, key):
@@ -70,7 +81,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+
+        # return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -82,6 +94,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+
+        hash_data[index] = value
 
 
     def delete(self, key):
@@ -93,6 +108,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        if not key:
+            print("Key cannot be empty")
+        else:
+            index = self.hash_index(key)
+
+        if hash_data[index] is not None:
+            hash_data[index] = None
+        return hash_data[index]
 
 
     def get(self, key):
@@ -105,6 +128,13 @@ class HashTable:
         """
         # Your code here
 
+        if not key:
+            return None
+        else:
+            index = self.hash_index[key]
+            val = hash_data[index]
+        return val
+
 
     def resize(self, new_capacity):
         """
@@ -114,6 +144,10 @@ class HashTable:
         Implement this.
         """
         # Your code here
+
+        self.new_capacity = MIN_CAPACITY * 2
+
+
 
 
 
